@@ -2,17 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function Navbar() {
-  const [username, setUsername] = useState(null);
 
+  const [username, setUsername] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
+
+  
   useEffect(() => {
-    // Check if the user is authenticated by verifying the token in localStorage
     const token = localStorage.getItem('token');
     if (token) {
-      // Decode the JWT token to get user information (username in this case)
       const decodedToken = parseJwt(token);
       if (decodedToken && decodedToken.username) {
         setUsername(decodedToken.username);
       }
+    }
+
+    // Fetch the user's cart data from the server to get the cart count
+    if (token) {
+      fetch('/api/cart/view', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.items) {
+            const count = data.items.reduce((total, item) => total + item.quantity, 0);
+            setCartCount(count);
+          }
+        })
+        .catch((error) => console.error(error));
     }
   }, []);
 
@@ -21,7 +40,7 @@ function Navbar() {
     localStorage.removeItem('token');
     // Redirect to the login page or perform other desired actions
     window.location.href = '/login'; // Redirect to the login page
-  };
+  }
 
   function parseJwt(token) {
     try {
@@ -50,6 +69,7 @@ function Navbar() {
         )}
         <li><Link to="/create/category">Create category</Link></li>
         <li><Link to="/create/product">Post item</Link></li>
+        <li><Link to="/view/cart">Cart ({cartCount})</Link></li> {/* Display the cart count */}
       </ul>
     </nav>
   );
