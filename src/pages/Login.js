@@ -40,7 +40,7 @@ function Login() {
   
             // Redirect to the user's dashboard or protected route based on the role
             if (userRole === 'buyer') {
-              navigate('/');
+              navigate('/user-dashboard');
             } else if (userRole === 'seller') {
               navigate('/seller-dashboard');
             } else if (userRole === 'admin') {

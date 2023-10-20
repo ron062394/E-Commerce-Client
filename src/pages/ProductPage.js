@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
+import { Link } from 'react-router-dom';
 
-function AddToCart() {
+function ProductPage() {
   const { id } = useParams(); // Get the product ID from the URL
   const { cart, dispatch } = useContext(CartContext); // Access the cart state and dispatch function
 
@@ -94,22 +95,26 @@ function AddToCart() {
   return (
     <div>
       {product ? (
-        <div className='cart-container'>
-          <img className='cart-image' src={product.images[0]} alt={product.title} />
-            <div>
-                <h2>{product.title}</h2>
-                <p>{product.description}</p>
-                <p className="price">${product.price.toFixed(2)}</p>
-                <p>Stock: {stock}</p> {/* Display the product's stock */}
-                <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    min="1"
-                    max={stock}
-                />
-                <button onClick={handleAddToCart}>Add to Cart</button>
-            </div>
+        <div className='product-page'>
+          <div className='product-container'>
+            
+            <img className='cart-image' src={product.images[0]} alt={product.title} />
+              <div>
+                  <h2>{product.title}</h2>
+                  <p>{product.description}</p>
+                  <p className="price">${product.price.toFixed(2)}</p>
+                  <p>Stock: {stock}</p> {/* Display the product's stock */}
+                  <input
+                      type="number"
+                      value={quantity}
+                      onChange={(e) => setQuantity(e.target.value)}
+                      min="1"
+                      max={stock}
+                  />
+                  <button onClick={handleAddToCart}>Add to Cart</button>
+              </div>
+              <li><Link to="/shopping-cart">View Cart</Link></li>
+          </div>
         </div>
       ) : (
         <p>Loading...</p>
@@ -118,4 +123,4 @@ function AddToCart() {
   );
 }
 
-export default AddToCart;
+export default ProductPage;

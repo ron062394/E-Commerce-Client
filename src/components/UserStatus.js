@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-function Navbar() {
+function UserStatus() {
 
   const [username, setUsername] = useState(null);
   const [cartCount, setCartCount] = useState(0);
@@ -53,7 +53,6 @@ function Navbar() {
   return (
     <nav className='navbar'>
       <ul>
-        <li><Link to="/">Home</Link></li>
         {username ? (
           // Show the username and "Logout" button when the user is logged in
           <li>
@@ -72,4 +71,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default UserStatus;
