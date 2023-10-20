@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -7,7 +8,8 @@ function Signup() {
     password: '',
     role: 'buyer',
   });
-  const [isSignupSuccess, setIsSignupSuccess] = useState(false); // New state for success message
+  const [isSignupSuccess, setIsSignupSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,16 +27,23 @@ function Signup() {
       });
 
       if (response.status === 201) {
-        // Successful signup
         const data = await response.json();
-        localStorage.setItem('token', data.token); // Store the token in localStorage
-        setIsSignupSuccess(true); // Set the success state
+        localStorage.setItem('token', data.token);
+        setIsSignupSuccess(true);
+
+        // Role-based redirection based on the user's input
+        const userRole = formData.role;
+        if (userRole === 'buyer') {
+          navigate('/');
+        } else if (userRole === 'seller') {
+          navigate('/seller-dashboard');
+        } else if (userRole === 'admin') {
+          navigate('/admin-dashboard');
+        }
       } else if (response.status === 400) {
-        // Handle validation error or other specific error
         const errorData = await response.json();
         console.error('Signup failed. Error data:', errorData);
       } else {
-        // Handle other errors (e.g., 500 Internal Server Error)
         console.error('Signup failed');
       }
     } catch (error) {
@@ -74,6 +83,7 @@ function Signup() {
         <select name="role" value={formData.role} onChange={handleInputChange}>
           <option value="buyer">Buyer</option>
           <option value="seller">Seller</option>
+          <option value="admin">Admin</option>
         </select>
       </label>
       <button onClick={handleSignup}>Signup</button>

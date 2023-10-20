@@ -9,6 +9,9 @@ import Header from './components/Header/Header';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import ShoppingCart from './components/ShoppingCart';
+import SellerDashboard from './components/SellerDashboard';
+import AdminDashboard from './components/AdminDashboard';
+
 
 function App() {
   return (
@@ -22,6 +25,8 @@ function App() {
         <Route path="/login" element={<Login />} /> {/* Route for the AddToCart component */}
         <Route path="/signup" element={<Signup />} /> {/* Route for the AddToCart component */}
         <Route path="/shopping-cart" element={<ShoppingCart />} /> {/* Route for the AddToCart component */}
+        <Route path="/seller-dashboard" element={<SellerDashboard />} /> {/* Route for the AddToCart component */}
+        <Route path="/admin-dashboard" element={<AdminDashboard />} /> {/* Route for the AddToCart component */}
         </Routes>
     </Router>
   );

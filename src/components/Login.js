@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    role: 'buyer', // Default role is 'buyer'
   });
 
   const [isLoginSuccess, setIsLoginSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,12 +24,30 @@ function Login() {
         },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.status === 200) {
         const data = await response.json();
         localStorage.setItem('token', data.token);
         setIsLoginSuccess(true);
-        // Redirect to the user's dashboard or protected route
+  
+        // Decode the token to access the user's role
+        const tokenParts = data.token.split('.');
+        if (tokenParts.length === 3) {
+          const decodedPayload = JSON.parse(atob(tokenParts[1]));
+          if (decodedPayload && decodedPayload.role) {
+            const userRole = decodedPayload.role;
+            console.log('User role:', userRole);
+  
+            // Redirect to the user's dashboard or protected route based on the role
+            if (userRole === 'buyer') {
+              navigate('/');
+            } else if (userRole === 'seller') {
+              navigate('/seller-dashboard');
+            } else if (userRole === 'admin') {
+              navigate('/admin-dashboard');
+            }
+          }
+        }
       } else if (response.status === 401) {
         console.error('Login failed. Please check your credentials.');
       } else {
@@ -38,6 +57,7 @@ function Login() {
       console.error(error);
     }
   }
+  
 
   return (
     <div>
@@ -59,12 +79,6 @@ function Login() {
         placeholder="Password"
         onChange={handleInputChange}
       />
-      <label>Role</label>
-      <select name="role" value={formData.role} onChange={handleInputChange}>
-        <option value="buyer">Buyer</option>
-        <option value="seller">Seller</option>
-        <option value="admin">Admin</option> {/* Added 'admin' as an option */}
-      </select>
       <button onClick={handleLogin}>Login</button>
     </div>
   );
