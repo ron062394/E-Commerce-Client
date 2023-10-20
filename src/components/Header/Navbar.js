@@ -6,7 +6,7 @@ function Navbar() {
   const [username, setUsername] = useState(null);
   const [cartCount, setCartCount] = useState(0);
 
-  
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -52,7 +52,7 @@ function Navbar() {
 
   return (
     <nav className='navbar'>
-      <ul className=''>
+      <ul>
         <li><Link to="/">Home</Link></li>
         {username ? (
           // Show the username and "Logout" button when the user is logged in
@@ -67,9 +67,6 @@ function Navbar() {
             <li><Link to="/signup">Sign Up</Link></li>
           </>
         )}
-        <li><Link to="/create/category">Create category</Link></li>
-        <li><Link to="/create/product">Post item</Link></li>
-        <li><Link to="/view/cart">Cart ({cartCount})</Link></li> {/* Display the cart count */}
       </ul>
     </nav>
   );

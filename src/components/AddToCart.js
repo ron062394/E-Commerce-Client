@@ -8,6 +8,12 @@ function AddToCart() {
 
   const [product, setProduct] = useState(null);
 
+  // State to track the quantity selected by the user
+  const [quantity, setQuantity] = useState(1);
+
+  // State to store the product's stock
+  const [stock, setStock] = useState(0);
+
   // Fetch the user's cart data to get the cart count
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -23,7 +29,6 @@ function AddToCart() {
           if (data.items) {
             const count = data.items.reduce((total, item) => total + item.quantity, 0);
             console.log(count)
-            // Set the cart count in your CartContext using the dispatch function
             dispatch({ type: 'SET_CART_COUNT', count });
           }
         })
@@ -31,36 +36,41 @@ function AddToCart() {
     }
   }, [dispatch]);
 
+  // Fetch the product by ID from your API and get the stock value
   useEffect(() => {
-    // Fetch the product by ID from your API
     fetch(`/api/product/get/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     })
       .then((response) => response.json())
-      .then((data) => setProduct(data))
+      .then((data) => {
+        setProduct(data);
+        setStock(data.stock); // Set the product's stock value
+      })
       .catch((error) => console.error(error));
   }, [id]);
 
   const handleAddToCart = async () => {
     try {
       if (!product) {
-        // Handle the case where the product is not available yet
         alert('Product data is still loading. Please wait.');
         return;
       }
 
-      // Get the product ID from the route parameters
       const productId = id;
 
-      // Create a request body with the product ID and the desired quantity
+      // Check if the user-selected quantity is valid
+      if (quantity > stock) {
+        alert('Order quantity exceeds available stock.');
+        return;
+      }
+
       const requestData = {
         productId,
-        quantity: 1, // You can modify this to allow users to select the quantity
+        quantity: quantity,
       };
 
-      // Send a POST request to add the product to the cart
       const response = await fetch('/api/cart/add', {
         method: 'POST',
         headers: {
@@ -71,13 +81,9 @@ function AddToCart() {
       });
 
       if (response.status === 200) {
-        // Product added to the cart successfully
         alert('Product added to the cart successfully');
-
-        // Dispatch an action to update the cart in the CartContext
         dispatch({ type: 'ADD_TO_CART', product: product });
       } else {
-        // Handle errors, e.g., product not found or other issues
         alert('Failed to add the product to the cart');
       }
     } catch (error) {
@@ -88,12 +94,22 @@ function AddToCart() {
   return (
     <div>
       {product ? (
-        <div>
-          <h2>{product.title}</h2>
-          <img src={product.images[0]} alt={product.title} />
-          <p>{product.description}</p>
-          <p className="price">${product.price.toFixed(2)}</p>
-          <button onClick={handleAddToCart}>Add to Cart</button>
+        <div className='cart-container'>
+          <img className='cart-image' src={product.images[0]} alt={product.title} />
+            <div>
+                <h2>{product.title}</h2>
+                <p>{product.description}</p>
+                <p className="price">${product.price.toFixed(2)}</p>
+                <p>Stock: {stock}</p> {/* Display the product's stock */}
+                <input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    min="1"
+                    max={stock}
+                />
+                <button onClick={handleAddToCart}>Add to Cart</button>
+            </div>
         </div>
       ) : (
         <p>Loading...</p>
