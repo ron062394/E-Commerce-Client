@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -60,26 +60,32 @@ function Login() {
   
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className='login-container'>
+      <h2>Sign in</h2>
       {isLoginSuccess && (
         <p style={{ color: 'green' }}>Login successful! You are now logged in.</p>
       )}
-      <label>Email</label>
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        onChange={handleInputChange}
-      />
-      <label>Password</label>
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        onChange={handleInputChange}
-      />
+      <div className='email-container'>
+        <label>Email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleInputChange}
+        />
+      </div>
+      <div className='password-container'>
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleInputChange}
+        />
+      </div>
       <button onClick={handleLogin}>Login</button>
+      <p> Don't have an account?</p>
+      <Link>Register here</Link>
     </div>
   );
 }

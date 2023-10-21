@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import ShippingInfo from '../components/ShippingInfo';
+import CartItem from '../components/CartItems';
 
 function ShoppingCart() {
   const [cartData, setCartData] = useState(null);
   const [productData, setProductData] = useState({});
+  const [shippingInfo, setShippingInfo] = useState({
+    name: '',
+    contactNumber: '', // Add contactNumber field
+    address: '',
+    city: '',
+    postalCode: '',
+  });
 
   useEffect(() => {
     // Fetch cart data using a JWT token
     const token = localStorage.getItem('token'); // Replace with your token retrieval logic
     if (token) {
-      fetch('http://localhost:3000/api/cart/view', {
+      fetch('/api/cart/view', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -24,7 +33,7 @@ function ShoppingCart() {
     // Fetch product data for each product in the cart
     if (cartData) {
       const promises = cartData.items.map((item) =>
-        fetch(`http://localhost:3000/api/product/get/${item.product}`, {
+        fetch(`/api/product/get/${item.product}`, {
           method: 'GET',
         })
           .then((response) => response.json())
@@ -51,9 +60,48 @@ function ShoppingCart() {
   };
 
   const handleCheckout = () => {
-    // Implement your checkout logic here
-    // This function can navigate the user to a checkout page or perform the checkout process.
-  };
+      if (!cartData) {
+        console.error('Cannot place an empty order');
+        return;
+      }
+    
+      // Get the user token (replace with your token retrieval logic)
+      const token = localStorage.getItem('token');
+    
+      if (!token) {
+        console.error('Token is missing');
+        return;
+      }
+    
+      // Create the order data with shipping info
+      const orderData = {
+        shippingInfo: {
+          name: shippingInfo.name,
+          contactNumber: shippingInfo.contactNumber,
+          address: shippingInfo.address,
+          city: shippingInfo.city,
+          postalCode: shippingInfo.postalCode,
+        },
+      };
+    
+      fetch('api/orders/place', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(orderData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Order placed successfully', data);
+          // Handle the response as needed
+        })
+        .catch((error) => {
+          console.error('Checkout failed', error);
+        });
+
+     };
 
   return (
     <div>
@@ -63,23 +111,21 @@ function ShoppingCart() {
           {cartData.items.map((item) => (
             <div key={item._id}>
               {productData[item.product] ? (
-                <div>
-                  <p>Product Name: {productData[item.product].title}</p>
-                  <p>Quantity: {item.quantity}</p>
-                  <p>Price: ${item.price.toFixed(2)}</p>
-                  <img className='shopping-cart-img' src={productData[item.product].images[0]} alt={productData[item.product].title} />
-                </div>
+                <CartItem item={item} productData={productData} />
               ) : (
                 <p>Loading product information...</p>
               )}
             </div>
           ))}
           <p>Total Price: ${calculateTotalPrice().toFixed(2)}</p>
-          <button onClick={handleCheckout}>Checkout</button>
         </div>
       ) : (
         <p>Your shopping cart is empty.</p>
       )}
+      <ShippingInfo
+        onShippingChange={setShippingInfo} // Update the shipping info in the parent component
+      />
+      <button onClick={handleCheckout}>Checkout</button> {/* Checkout button */}
     </div>
   );
 }

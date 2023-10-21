@@ -2,13 +2,14 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
-  background-color: #ffffff;
+
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #e3e3e3;
+  background-color: #FFF;
 }
 
 .header h1{
@@ -106,8 +107,9 @@ img {
   object-fit: cover;
 }
 
-.navbar ul {
+.user-status ul {
   display: flex;
+  justify-content: end;
 }
 
 li {
@@ -131,4 +133,32 @@ li {
   width: 150px;
   object-fit: cover;
   object-position: top;
+}
+
+
+/*Login form*/
+.login-container {
+  background-color: #ffffff;
+  width: 50%;
+  height: 30rem;
+  border: 1px solid #e3e3e3;
+  margin: auto;
+  margin-top: 2rem;
+}
+
+button {
+  background: #2c4b69;
+  padding: 10px 30px;
+  font-size: 20px;
+  text-decoration: none;
+  color: #FFF;
+  font-weight: 500;
+  border: 1px solid transparent;
+  transition: all 0.13s ease;
+}
+
+button:hover {
+  color: #2c4b69;
+  border-color: #2c4b69;
+  background: transparent;
 }

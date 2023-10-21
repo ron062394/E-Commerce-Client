@@ -51,7 +51,7 @@ function UserStatus() {
   }
 
   return (
-    <nav className='navbar'>
+    <nav className='user-status'>
       <ul>
         {username ? (
           // Show the username and "Logout" button when the user is logged in
