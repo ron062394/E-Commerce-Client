@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 function OrderHistory() {
   const [orders, setOrders] = useState([]);
 
+
+  
   useEffect(() => {
     // Fetch order history using an API request
     const token = localStorage.getItem('token'); // Replace with your token retrieval logic
@@ -33,21 +35,24 @@ function OrderHistory() {
       <ul>
         {orders.map((order) => (
           <li key={order._id}>
-            {/* Display order details here */}
             <p>Order ID: {order._id}</p>
-            <p>Order Date: {new Date(order.date).toLocaleString()}</p>
+            <p>Order Date: {new Date(order.createdDate).toLocaleString()}</p>
+            <p>Order Quantity: {order.quantity}</p>
             <ul>
               {order.products.map((product) => (
-                <li key={product.product._id}>
+                <li key={product._id}>
                   <p>Product Name: {product.product.title}</p>
-                  <p>Quantity: {product.quantity}</p>
-                  <p>Price: ${product.price.toFixed(2)}</p>
+                  <p>Product Description: {product.product.description}</p>
+                  <p>Price: ${product.product.price.toFixed(2)}</p>
+                  <p>Quantity Ordered: {product.quantity}</p>
+                  <p>Seller: {product.seller.username}</p>
                 </li>
               ))}
             </ul>
             <p>Shipping Address: {order.shippingInfo.address}, {order.shippingInfo.city}, {order.shippingInfo.postalCode}</p>
             <p>Order Total: ${order.orderTotal.toFixed(2)}</p>
             <p>Order Status: {order.orderStatus}</p>
+            <button>View order</button>
           </li>
         ))}
       </ul>
