@@ -1,7 +1,12 @@
+import Navbar from "../components/Navbar";
 const Header = () => {
     return ( 
         <div className="header">
-            <h1>ShopExpress</h1>
+            <div className="header-container">
+                <h1 className="logo-header">ShopExpress</h1>
+                <Navbar/>
+            </div>
+ 
         </div>
     );
 }

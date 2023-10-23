@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from React Router
 
-function OrderHistory() {
+function SellerOrderHistory() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -8,7 +9,7 @@ function OrderHistory() {
     const token = localStorage.getItem('token'); // Replace with your token retrieval logic
 
     if (token) {
-      fetch('/api/orders/history', {
+      fetch('/api/orders/seller/orders', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -34,22 +35,21 @@ function OrderHistory() {
         {orders.map((order) => (
           <li key={order._id}>
             <p>Order ID: {order._id}</p>
-            <p>Order Date: {new Date(order.date).toLocaleString()}</p> {/* Update this line */}
-            <p>Seller: {order.seller.username}</p>
+            <p>Order Date: {new Date(order.date).toLocaleString()}</p>
+            <p>Buyer: {order.buyer.username}</p>
             <ul>
               {order.products.map((product) => (
                 <li className='order-item' key={product._id}>
                   <p>Product Name: {product.title}</p>
                   <p>Price: ${product.price.toFixed(2)}</p>
                   <p>Quantity Ordered: {product.quantity}</p>
-
                 </li>
               ))}
             </ul>
             <p>Shipping Address: {order.shippingInfo.address}, {order.shippingInfo.city}, {order.shippingInfo.postalCode}</p>
             <p>Order Total: ${order.orderTotal.toFixed(2)}</p>
             <p>Order Status: {order.orderStatus}</p>
-            <button>View order</button>
+            <Link to={`/seller-orders/${order._id}`}>View order</Link> {/* Link to the order details route */}
           </li>
         ))}
       </ul>
@@ -57,4 +57,4 @@ function OrderHistory() {
   );
 }
 
-export default OrderHistory;
+export default SellerOrderHistory;

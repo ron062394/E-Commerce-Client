@@ -2,7 +2,17 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
+}
 
+
+/*header*/
+
+.header-container{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1400px;
+  margin: auto;
 }
 
 .header {
@@ -12,7 +22,7 @@ body {
   background-color: #FFF;
 }
 
-.header h1{
+.logo-header{
   display: flex;
   background-color: #FFF;
   height: 57px;
@@ -21,7 +31,70 @@ body {
   font-weight: 600;
   align-items: center;
   padding: 20px 30px;
+  margin: 1% 0;
+  padding: 1% 0;
+}
+/**/
+.user-container{
+  display: flex;
+}
+
+/*Hero-banner*/
+.hero-banner {
+  color: #fff;
+  background-color:#2c4b69;
+
+}
+
+.hero-banner-image{
+  object-fit: contain;
+}
+
+.hero-banner-container {
+  display: flex;
+  max-width: 1400px;
+  margin: auto;
+}
+
+.banner-title {
+  font-size: 3rem;
+  width: 100%;
+}
+
+/*Carousel section*/
+.carousel-container{
+  padding: 1% 15%;
+}
+.carousel-banner-image {
+  object-fit: cover;
   
+}
+.thumbs-wrapper{
+  display: none;
+}
+
+.thumb {
+  height: 3rem;
+}
+
+/*product list*/
+.section-title {
+  color: #2c4b69;
+  font-weight: bold;
+  display: flex;
+  width: 50%;
+  font-size: 24px;
+  grid-gap: 45px;
+  align-items: center;
+  white-space: nowrap;
+  margin: 20px auto 40px;
+}
+
+span {
+  height: 2px;
+  display: block;
+  width: 50%;
+  background: #e3e3e3;
 }
 
 .product-item {
@@ -31,6 +104,9 @@ body {
     max-width: 320px;
     transition: all 0.13s ease;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .product-item:hover {
@@ -163,4 +239,58 @@ button:hover {
   color: #2c4b69;
   border-color: #2c4b69;
   background: transparent;
+}
+
+/*Product page*/
+.product-page{
+  margin: 2% 15%;
+  padding: 2% 10%;
+  width: 50%;
+  border: 1px solid #ccc;
+}
+
+.product-page-container {
+  display: flex;
+  justify-content: space-around;
+
+}
+
+/*Shopping cart*/
+
+.shopping-cart-section {
+  margin: 0 15%;
+}
+
+.cart-item-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart-button-container {
+  display: flex;
+}
+
+/*Navbar*/
+
+
+
+/*Order details*/
+.order-timeline {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.timeline-item {
+  flex: 1;
+  text-align: center;
+  color: #ccc;
+  font-size: 16px;
+  margin: 0 5px;
+}
+
+.timeline-item.active {
+  color: #007bff; /* Highlight the active status */
+  font-weight: bold;
 }

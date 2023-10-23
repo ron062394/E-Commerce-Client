@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ShippingInfo from '../components/ShippingInfo';
 import CartItem from '../components/CartItems';
+import { useNavigate } from 'react-router-dom';
+import ProductList from '../components/ProductList';
 
 function ShoppingCart() {
+  const navigate = useNavigate()
   const [cartData, setCartData] = useState(null);
   const [productData, setProductData] = useState({});
   const [shippingInfo, setShippingInfo] = useState({
@@ -60,51 +63,58 @@ function ShoppingCart() {
   };
 
   const handleCheckout = () => {
-      if (!cartData) {
-        console.error('Cannot place an empty order');
-        return;
-      }
-    
-      // Get the user token (replace with your token retrieval logic)
-      const token = localStorage.getItem('token');
-    
-      if (!token) {
-        console.error('Token is missing');
-        return;
-      }
-    
-      // Create the order data with shipping info
-      const orderData = {
-        shippingInfo: {
-          name: shippingInfo.name,
-          contactNumber: shippingInfo.contactNumber,
-          address: shippingInfo.address,
-          city: shippingInfo.city,
-          postalCode: shippingInfo.postalCode,
-        },
-      };
-    
-      fetch('api/orders/place', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(orderData),
+    if (!cartData) {
+      console.error('Cannot place an empty order');
+      return;
+    }
+  
+    // Get the user token (replace with your token retrieval logic)
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      console.error('Token is missing');
+      return;
+    }
+  
+    // Create the order data with shipping info
+    const orderData = {
+      shippingInfo: {
+        name: shippingInfo.name,
+        contactNumber: shippingInfo.contactNumber,
+        address: shippingInfo.address,
+        city: shippingInfo.city,
+        postalCode: shippingInfo.postalCode,
+      },
+    };
+  
+    fetch('api/orders/place', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(orderData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === 'Order placed successfully') {
+          // Order placed successfully, perform any necessary actions
+          console.log(data.message, data.orders);
+          // You can navigate to the order history page here
+          navigate('/order-history')
+        } else {
+          // Handle the case where the order placement failed
+          console.error('Order placement failed:', data.error);
+        }
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('Order placed successfully', data);
-          // Handle the response as needed
-        })
-        .catch((error) => {
-          console.error('Checkout failed', error);
-        });
-
-     };
+      .catch((error) => {
+        console.error('Checkout failed', error);
+      });
+  };
+  
 
   return (
-    <div>
+    <div className='shopping-cart-section'>
       <h1>Shopping Cart</h1>
       {cartData ? (
         <div>
@@ -126,6 +136,7 @@ function ShoppingCart() {
         onShippingChange={setShippingInfo} // Update the shipping info in the parent component
       />
       <button onClick={handleCheckout}>Checkout</button> {/* Checkout button */}
+      <ProductList/>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-function UserStatus() {
+function Navbar() {
 
   const [username, setUsername] = useState(null);
   const [cartCount, setCartCount] = useState(0);
@@ -53,9 +53,10 @@ function UserStatus() {
   return (
     <nav className='user-status'>
       <ul>
+        <li><Link to="/">Home</Link></li>
         {username ? (
           // Show the username and "Logout" button when the user is logged in
-          <li>
+          <li className='user-container'>
             <p>Hello, {username}</p>
             <button onClick={handleLogout}>Logout</button>
           </li>
@@ -71,4 +72,4 @@ function UserStatus() {
   );
 }
 
-export default UserStatus;
+export default Navbar;

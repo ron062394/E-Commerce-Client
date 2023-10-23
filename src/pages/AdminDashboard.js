@@ -1,7 +1,7 @@
 // AdminDashboard.js
 import React from 'react';
 import CategoryCreationForm from '../components/CategoryCreationForm';
-import UserStatus from '../components/UserStatus';
+import UserStatus from '../components/Navbar';
 
 function AdminDashboard() {
   return (

@@ -13,9 +13,10 @@ import Signup from './pages/Signup';
 import Homepage from './pages/Homepage';
 import SellerDashboard from './pages/SellerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
-import UserDashboard from './pages/UserDashboard';
 import ProductPage from './pages/ProductPage';
 import OrderHistory from './components/OrderHistory';
+import SellerOrderDetails from './components/SellerOrderDetails';
+
 
 function App() {
   return (
@@ -29,8 +30,8 @@ function App() {
         <Route path="/shopping-cart" element={<ShoppingCart />} />
         <Route path="/seller-dashboard" element={<SellerDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/order-history" element={<OrderHistory />} />
+        <Route path="/seller-orders/:orderId" element={<SellerOrderDetails/>} />
         </Routes>
     </Router>
   );
