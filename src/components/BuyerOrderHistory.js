@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-function OrderHistory() {
+function BuyerOrderHistory() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ function OrderHistory() {
             <p>Shipping Address: {order.shippingInfo.address}, {order.shippingInfo.city}, {order.shippingInfo.postalCode}</p>
             <p>Order Total: ${order.orderTotal.toFixed(2)}</p>
             <p>Order Status: {order.orderStatus}</p>
-            <button>View order</button>
+            <Link to={`/buyer-orders/${order._id}`}>View order</Link> {/* Link to the order details route */}
           </li>
         ))}
       </ul>
@@ -57,4 +58,4 @@ function OrderHistory() {
   );
 }
 
-export default OrderHistory;
+export default BuyerOrderHistory;

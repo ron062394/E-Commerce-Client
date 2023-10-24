@@ -15,7 +15,7 @@ function SellerOrderDetails() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ orderStatus: newStatus }),
+        body: JSON.stringify({ newStatus: newStatus }),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -49,7 +49,7 @@ function SellerOrderDetails() {
         <div>
           <p>Order ID: {order._id}</p>
           <p>Order Date: {new Date(order.date).toLocaleString()}</p>
-          <p>Seller: {order.seller.username}</p>
+          <p>Buyer: {order.buyer.username}</p>
           <p>Order Status: {order.orderStatus}</p>
 
           <ul className="order-timeline">
