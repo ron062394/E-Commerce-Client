@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
+
+
 
 function Login() {
+
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
 
+  const { setUsername } = useUser();
   const [isLoginSuccess, setIsLoginSuccess] = useState(false);
   const navigate = useNavigate();
 
@@ -29,15 +35,18 @@ function Login() {
         const data = await response.json();
         localStorage.setItem('token', data.token);
         setIsLoginSuccess(true);
-  
+      
         // Decode the token to access the user's role
         const tokenParts = data.token.split('.');
+      
         if (tokenParts.length === 3) {
           const decodedPayload = JSON.parse(atob(tokenParts[1]));
           if (decodedPayload && decodedPayload.role) {
             const userRole = decodedPayload.role;
-            console.log('User role:', userRole);
-  
+      
+            // Set the username in the context
+            setUsername(decodedPayload.username);
+      
             // Redirect to the user's dashboard or protected route based on the role
             if (userRole === 'buyer') {
               navigate('/');
@@ -53,9 +62,12 @@ function Login() {
       } else {
         console.error('Login failed');
       }
+      
     } catch (error) {
       console.error(error);
     }
+
+    
   }
   
 

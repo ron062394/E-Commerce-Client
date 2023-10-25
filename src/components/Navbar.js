@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
+import {useCart} from '../context/CartContext'
+
 
 function Navbar() {
-
-  const [username, setUsername] = useState(null);
+  const { username  } = useUser();
+  const { cart } = useCart()
+  const updatedcartCount = cart.cartCount
   const [cartCount, setCartCount] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(true); // New state to track loading status
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken = parseJwt(token);
-      if (decodedToken && decodedToken.username) {
-        setUsername(decodedToken.username);
-      }
-    }
-
     // Fetch the user's cart data from the server to get the cart count
     if (token) {
       fetch('/api/cart/view', {
@@ -31,9 +28,16 @@ function Navbar() {
             setCartCount(count);
           }
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
+        .finally(() => {
+          setIsLoading(false); // Mark loading as complete
+        });
+    } else {
+      setIsLoading(false); // No token, loading is still complete
     }
   }, []);
+
+
 
   const handleLogout = () => {
     // Clear the user's authentication token and other data
@@ -54,18 +58,23 @@ function Navbar() {
     <nav className='user-status'>
       <ul>
         <li><Link to="/">Home</Link></li>
-        {username ? (
-          // Show the username and "Logout" button when the user is logged in
-          <li className='user-container'>
-            <p>Hello, {username}</p>
-            <button onClick={handleLogout}>Logout</button>
-          </li>
+        {isLoading ? ( // Show loading message if still loading
+          <li>Loading...</li>
         ) : (
-          // Show the "Login" and "Sign Up" links when the user is not logged in
-          <>
-            <li><Link to="/login">Login</Link></li>
-            <li><Link to="/signup">Sign Up</Link></li>
-          </>
+          username ? (
+            // Show the username and "Logout" button when the user is logged in
+            <li className='user-container'>
+              <p>Cart{cartCount}</p>
+              <p>Hello, {username}</p>
+              <button onClick={handleLogout}>Logout</button>
+            </li>
+          ) : (
+            // Show the "Login" and "Sign Up" links when the user is not logged in
+            <>
+              <li><Link to="/login">Login</Link></li>
+              <li><Link to="/signup">Sign Up</Link></li>
+            </>
+          )
         )}
       </ul>
     </nav>

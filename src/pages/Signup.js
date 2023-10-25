@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
+
 
 function Signup() {
+  const { setUsername } = useUser();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -16,7 +19,10 @@ function Signup() {
     setFormData({ ...formData, [name]: value });
   };
 
+
+
   const handleSignup = async () => {
+
     try {
       const response = await fetch('/api/user/register', {
         method: 'POST',
@@ -25,12 +31,15 @@ function Signup() {
         },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.status === 201) {
         const data = await response.json();
         localStorage.setItem('token', data.token);
         setIsSignupSuccess(true);
-
+  
+        // Set the username in the context
+        setUsername(formData.username);
+  
         // Role-based redirection based on the user's input
         const userRole = formData.role;
         if (userRole === 'buyer') {
@@ -50,6 +59,7 @@ function Signup() {
       console.error(error);
     }
   };
+  
 
   return (
     <div>
