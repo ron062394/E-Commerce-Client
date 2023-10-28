@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import ProductList from '../components/ProductList';
 import { useNavigate } from 'react-router-dom';
-
+import { useAuthContext } from '../Hooks/useAuthContext';
 
 function ProductPage() {
   const { id } = useParams();
@@ -11,33 +11,14 @@ function ProductPage() {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [stock, setStock] = useState(0);
-
   const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const {user} = useAuthContext();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetch('/api/cart/view', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.items) {
-            const count = data.items.reduce((total, item) => total + item.quantity, 0);
-            dispatch({ type: 'SET_CART_COUNT', count });
-          }
-        })
-        .catch((error) => console.error(error));
-    }
-  }, [dispatch]);
 
   useEffect(() => {
     fetch(`/api/product/get/${id}`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${user.token}`,
       },
     })
       .then((response) => response.json())
@@ -71,7 +52,7 @@ function ProductPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(requestData),
       });

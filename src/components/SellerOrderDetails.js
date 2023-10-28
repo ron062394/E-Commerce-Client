@@ -4,10 +4,9 @@ import { useParams } from 'react-router-dom';
 function SellerOrderDetails() {
   const [order, setOrder] = useState(null);
   const { orderId } = useParams();
-
+  const { token } = JSON.parse(localStorage.getItem('user')) || {};
+  
   const updateOrderStatus = (newStatus) => {
-    const token = localStorage.getItem('token');
-
     if (token) {
       fetch(`/api/orders/${orderId}`, {
         method: 'PUT',
@@ -19,7 +18,6 @@ function SellerOrderDetails() {
       })
         .then((response) => response.json())
         .then((data) => {
-          // After successfully updating the order status, you can set the updated order in the state
           setOrder(data.order);
         })
         .catch((error) => console.error('Error updating order status', error));
@@ -27,8 +25,6 @@ function SellerOrderDetails() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-
     if (token) {
       fetch(`/api/orders/${orderId}`, {
         method: 'GET',

@@ -12,7 +12,7 @@ export const useSignup = () => {
     const {dispatch} = useAuthContext();
 
     // Define the signup function, which will be used to initiate the registration process
-    const signup = async (email, password) => {
+    const signup = async (username, email, password, role) => {
         // Set isLoading to true and clear any previous errors
         setIsLoading(true)
         setError(null)
@@ -24,6 +24,12 @@ export const useSignup = () => {
             password,
             role,
         };
+        console.log(requestBody)
+        const response = await fetch('/api/user/register', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(requestBody)
+        })
 
         // Parse the response as JSON
         const json = await response.json();

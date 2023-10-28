@@ -3,8 +3,12 @@ import ShippingInfo from '../components/ShippingInfo';
 import CartItem from '../components/CartItems';
 import { useNavigate } from 'react-router-dom';
 import ProductList from '../components/ProductList';
+import { useAuthContext } from '../Hooks/useAuthContext';
 
 function ShoppingCart() {
+  const retrievedUser = localStorage.getItem('user');
+  const user = JSON.parse(retrievedUser)
+  
   const navigate = useNavigate()
   const [cartData, setCartData] = useState(null);
   const [productData, setProductData] = useState({});
@@ -18,12 +22,12 @@ function ShoppingCart() {
 
   useEffect(() => {
     // Fetch cart data using a JWT token
-    const token = localStorage.getItem('token'); // Replace with your token retrieval logic
-    if (token) {
+
+    if (user) {
       fetch('/api/cart/view', {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${user.token}`,
         },
       })
         .then((response) => response.json())
@@ -66,17 +70,12 @@ function ShoppingCart() {
     if (!cartData) {
       console.error('Cannot place an empty order');
       return;
-    }
-  
-    // Get the user token (replace with your token retrieval logic)
+    }  
     const token = localStorage.getItem('token');
-  
-    if (!token) {
+    if (!user.token) {
       console.error('Token is missing');
       return;
     }
-  
-    // Create the order data with shipping info
     const orderData = {
       shippingInfo: {
         name: shippingInfo.name,
@@ -91,19 +90,16 @@ function ShoppingCart() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${user.token}`,
       },
       body: JSON.stringify(orderData),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.message === 'Order placed successfully') {
-          // Order placed successfully, perform any necessary actions
           console.log(data.message, data.orders);
-          // You can navigate to the order history page here
           navigate('/order-history')
         } else {
-          // Handle the case where the order placement failed
           console.error('Order placement failed:', data.error);
         }
       })

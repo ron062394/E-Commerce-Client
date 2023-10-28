@@ -7,7 +7,8 @@ function CategoryCreationForm() {
   });
 
   const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null); // New state for success message
+  const [successMessage, setSuccessMessage] = useState(null);
+  const { token } = JSON.parse(localStorage.getItem('user')) || {};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,22 +21,19 @@ function CategoryCreationForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
 
       if (response.status === 201) {
-        // Category created successfully
         console.log('Category created successfully');
-        setSuccessMessage('Category created successfully'); // Set the success message
-        setFormData({ name: '', description: '' }); // Reset the form data
+        setSuccessMessage('Category created successfully'); 
+        setFormData({ name: '', description: '' }); 
       } else if (response.status === 400) {
-        // Handle a bad request error (e.g., validation error)
         const errorData = await response.json();
         setErrorMessage(errorData.message);
       } else {
-        // Handle other errors
         console.error('Category creation failed');
         setErrorMessage('An error occurred while creating the category.');
       }

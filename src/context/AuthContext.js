@@ -1,7 +1,7 @@
 //Create this component first then proceed to useAuthContext
 
 //Import conext functions
-import { createContext, useReducer, useEffect, Children } from "react";
+import { createContext, useReducer, useEffect, children } from "react";
 
 // Create an authentication context using React's createContext
 export const AuthContext = createContext();
@@ -19,7 +19,7 @@ export const authReducer = (state, action) => {
 }
 
 // Create an AuthContextProvider component
-export const AuthContextProvider = (children) => {
+export const AuthContextProvider = ({children}) => {
     //Initialize the state and dispatch function using useReducer
     //Creating a structured way to manage the authentication state and handle actions that change that state. 
     const [state, dispatch] = useReducer(authReducer, {
@@ -34,12 +34,10 @@ export const AuthContextProvider = (children) => {
             dispatch({ type: 'LOGIN', payload: user })
         }
     }, []);
-    
-    console.log('AuthContext state:', state);
 
     return(
         <AuthContext.Provider value={{ ...state, dispatch }}>
-            {Children}
+            {children}
         </AuthContext.Provider>
     );
 }

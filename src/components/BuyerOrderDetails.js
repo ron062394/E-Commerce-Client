@@ -4,9 +4,8 @@ import { useParams } from 'react-router-dom';
 function BuyerOrderDetails() {
   const [order, setOrder] = useState(null);
   const { orderId } = useParams();
-
+  const { token } = JSON.parse(localStorage.getItem('user')) || {};
   const updateOrderStatus = (newStatus) => {
-    const token = localStorage.getItem('token');
 
     if (token) {
       fetch(`/api/orders/${orderId}`, {
@@ -27,7 +26,6 @@ function BuyerOrderDetails() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
 
     if (token) {
       fetch(`/api/orders/${orderId}`, {

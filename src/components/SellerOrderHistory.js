@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom'; // Import Link from React Router
 
 function SellerOrderHistory() {
   const [orders, setOrders] = useState([]);
+  const { token } = JSON.parse(localStorage.getItem('user')) || {};
 
   useEffect(() => {
-    // Fetch order history using an API request
-    const token = localStorage.getItem('token'); // Replace with your token retrieval logic
-
     if (token) {
       fetch('/api/orders/seller/orders', {
         method: 'GET',
@@ -17,7 +15,6 @@ function SellerOrderHistory() {
       })
         .then((response) => response.json())
         .then((data) => {
-          // Ensure data is an array before setting the state
           if (Array.isArray(data)) {
             setOrders(data);
           } else {

@@ -143,7 +143,7 @@ function ProductPostingForm() {
             onChange={handleInputChange}
           />
         </label>
-        <button type="submit">Create Product</button>
+        <button type="submit">Create Listing</button>
       </form>
     </div>
   );
